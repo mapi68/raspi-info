@@ -105,7 +105,7 @@ echo
 
 # Complete RAM data
 echo -e '\e[0m'"RAM usage and Swap in MB"
-echo -e '\e[33m'"`free --mega -t`"
+echo -e '\e[33m'"`free --mega -tl`"
 echo -e '\e[0m'
 
 # Lsmod
