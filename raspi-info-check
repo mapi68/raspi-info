@@ -3,11 +3,11 @@
 
 COLOR=`shuf -i91-96 -n1`
 echo && echo && echo
-echo -e '\e[0m\e['$COLOR'm                     RASPI-INFO-CHECK'
+echo -e '\e[0m\e['$COLOR'm                      RASPI-INFO-CHECK'
 echo -e '\e[0m\e[0m     How many seconds do you want to update the data?'
 echo -e '                  Press a key from 1 to 9.'
 echo -e '    If you want to leave the default time (5 seconds)'
-read -p "            press any letter key (no number): " -n 1 -r -s
+read -p "             press any letter key (no number). " -n 1 -r -s
 echo
 
 if ! [[ $REPLY =~ ^[1-9]$ ]]; then
@@ -17,7 +17,7 @@ fi
 echo
 echo -e '\e[0m\e['$COLOR'm                  Press CTRL + C to exit'
 echo -e '\e[0m'
-echo "   Time     Load average    Temp    Clock  FreeMem   Volt"
+echo "   Time     Load average    Temp    Clock  FreeMem  Volt"
 
 while true; do
 	let ++Counter
