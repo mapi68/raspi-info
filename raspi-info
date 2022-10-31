@@ -137,7 +137,7 @@ echo -e -n '\e[0m\e[1m'"Internal IP:" '\e[36m\e[1m'$INTERFACE
 # WLAN quality
 if [[ $INTERFACE =~ wlan0 ]]; then
 	echo -e -n '\e[33m'" "
-	iwgetid | awk '{print $2}'
+	iwgetid
 	iwconfig wlan0 | grep -i "Bit Rate" | sed -e 's/^\s*//' -e '/^$/d' # REMOVE TAB
 	iwconfig wlan0 | grep -i "Link Quality" | sed -e 's/^\s*//' -e '/^$/d' # REMOVE TAB
 else
