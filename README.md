@@ -11,9 +11,10 @@
 ## Overview
 **RASPI-INFO is a tool to get a lot of infomations about your Raspberry Pi.**
 
-Direct use from shell: raspi-info or raspi-info-light. Automatic use: when you login through SSH (only raspi-info-light).
-RASPI-INFO provides too more than 100 "shell tips" that can be useful to help you in bash!
-When a new update will be released you'll receive a message at the end of program.
+- Direct use from shell: raspi-info or raspi-info-light
+- Automatic use: when you login through SSH (only raspi-info-light)
+- RASPI-INFO provides too more than 100 "shell tips" that can be useful to help you in bash!
+- When a new update will be released you'll receive a message at the end of program
 
 ![logo](images/raspi-info-logo.png)
 
