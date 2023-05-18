@@ -229,7 +229,7 @@ if [[ -f "/usr/local/bin/pihole" ]]; then
 	}
 	PiholeFTL() {
 		local ftl_port LINE
-		ftl_port=$(cat /run/pihole-FTL.port 2> /dev/null)
+		ftl_port=4711 #$(cat /run/pihole-FTL.port 2> /dev/null)
 		if [[ -n "$ftl_port" ]]; then
 			exec 3<>"/dev/tcp/127.0.0.1/$ftl_port"
 			if { "true" >&3; } 2> /dev/null; then
