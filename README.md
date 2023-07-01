@@ -199,4 +199,4 @@ sudo apt --purge autoremove raspi-info -y
   
   
 ## License
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
