@@ -11,6 +11,8 @@
 ## Overview
 **RASPI-INFO is a tool to get a lot of infomations about your Raspberry Pi.**
 
+Discover the heartbeat of your Raspberry Pi with raspi-info! Unravel its mysteries as you explore system details, CPU prowess, network performance, and more in a mesmerizing, colorful display. From CPU temperature to advanced internet insights, embark on an exhilarating adventure with raspi-info!
+
 - Direct use from shell: raspi-info or raspi-info-light
 - Automatic use: when you login through SSH (only raspi-info-light)
 - RASPI-INFO provides too more than 100 "shell tips" that can be useful to help you in bash!
