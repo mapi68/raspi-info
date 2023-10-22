@@ -47,7 +47,7 @@ figlet "raspi-info $VERSION"
 echo
 
 # System
-if [[ "$RASPMOD" == "Raspberry Pi 4"* ]]; then
+if [[ "$RASPMOD" == "Raspberry Pi 4"* ]] || [[ "$RASPMOD" == "Raspberry Pi Compute Module 4"* ]] || [[ "$RASPMOD" == "Raspberry Pi 400"* ]] || [[ "$RASPMOD" == "Raspberry Pi 5"* ]]; then
 	echo -e '\e[33m'"$RASPMOD with ${MEMTOT}GB RAM / Bootloader date: $BOOTLD"; else
 	echo -e '\e[33m'"$RASPMOD"; fi
 
