@@ -260,7 +260,6 @@ if [[ -f "/etc/wireguard/wg0.conf" ]]; then
 	if [[ -z `wg` ]]; then
 		:
 	else
-		echo
 		echo -e '\e[33m'"Wireguard VPN tunnel"
 		echo -e '\e[0m'"Public key: "'\e[36m'"`wg | grep "public key" | awk '{print $3}'`"
 		echo -e '\e[0m'"Listening port: "'\e[36m'"`wg show | grep "listening port" | awk '{print $3}'`"
