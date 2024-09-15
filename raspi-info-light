@@ -33,10 +33,10 @@ MEMTOT=$((`grep -i MemTotal /proc/meminfo | cut -f1 -dk | cut -f2 -d:` / (1024*1
 clear
 
 # System
-if [[ "$RASPMOD" == "Raspberry Pi 4"* ]]; then
+if [[ "$RASPMOD" == "Raspberry Pi 4"* ]] || [[ "$RASPMOD" == "Raspberry Pi Compute Module 4"* ]] || [[ "$RASPMOD" == "Raspberry Pi 400"* ]] || [[ "$RASPMOD" == "Raspberry Pi 5"* ]]; then
 	echo -e '\e[33m'"$RASPMOD with ${MEMTOT}GB RAM"; else
 	echo -e '\e[33m'"$RASPMOD"; fi
-echo -e '\e[32m'"`lsb_release -d | awk '/Description:/ {print $2, $3, $4, $5}'`"
+echo -e '\e[32m'"`lsb_release -d | awk '/Description:/ {printf "%s %s ", $2, $3}' && cat /etc/debian_version | tr -d '\n' && lsb_release -d | awk '/Description:/ {printf " %s", $5}'`"
 
 # Uptime and load average
 echo -e "Load average (1m, 5m, 15m)`uptime | awk -F'[a-z]:' '{print $2}'`"

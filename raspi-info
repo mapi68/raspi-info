@@ -52,7 +52,7 @@ if [[ "$RASPMOD" == "Raspberry Pi 4"* ]] || [[ "$RASPMOD" == "Raspberry Pi Compu
 	echo -e '\e[33m'"$RASPMOD"; fi
 
 echo -e '\e[32m'"Hardware: "`cat /proc/cpuinfo | grep Hardware | cut -d " " -f 2` "/ Revision: "`cat /proc/cpuinfo | grep Revision | cut -d " " -f 2` "/ Serial number: "`cat /proc/cpuinfo | grep Serial | cut -d " " -f 2`
-echo -e "Operative system: `lsb_release -d | awk '/Description:/ {print $2, $3, $4, $5}'` / Architecture: `uname -m`"
+echo -e "Operative system: `lsb_release -d | awk '/Description:/ {printf "%s %s ", $2, $3}' && cat /etc/debian_version | tr -d '\n' && lsb_release -d | awk '/Description:/ {printf " %s", $5}'` / Architecture: `uname -m`"
 echo -e "Kernel version: `uname -r` (`uname -v`)"
 echo -e `bash --version | head -n 1`
 
