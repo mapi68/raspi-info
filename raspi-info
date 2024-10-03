@@ -51,7 +51,14 @@ if [[ "$RASPMOD" == "Raspberry Pi 4"* ]] || [[ "$RASPMOD" == "Raspberry Pi Compu
 	echo -e '\e[33m'"$RASPMOD with ${MEMTOT}GB RAM / Bootloader date: $BOOTLD"; else
 	echo -e '\e[33m'"$RASPMOD"; fi
 
-echo -e '\e[32m'"Hardware: "`cat /proc/cpuinfo | grep Hardware | cut -d " " -f 2` "/ Revision: "`cat /proc/cpuinfo | grep Revision | cut -d " " -f 2` "/ Serial number: "`cat /proc/cpuinfo | grep Serial | cut -d " " -f 2`
+HARDWARE=$(cat /proc/cpuinfo | grep -i Hardware | cut -d " " -f 2)
+REVISION=$(cat /proc/cpuinfo | grep Revision | cut -d " " -f 2)
+SERIAL=$(cat /proc/cpuinfo | grep Serial | cut -d " " -f 2)
+
+if [[ -n "$HARDWARE" ]]; then
+	echo -e '\e[32m'"Hardware: $HARDWARE / Revision: $REVISION / Serial number: $SERIAL"; else
+	echo -e '\e[32m'"Revision: $REVISION / Serial number: $SERIAL"; fi
+
 echo -e "Operative system: `lsb_release -d | awk '/Description:/ {printf "%s %s ", $2, $3}' && cat /etc/debian_version | tr -d '\n' && lsb_release -d | awk '/Description:/ {printf " %s", $5}'` / Architecture: `uname -m`"
 echo -e "Kernel version: `uname -r` (`uname -v`)"
 echo -e `bash --version | head -n 1`
@@ -84,7 +91,7 @@ elif [ "$CPUTEMP" -gt  "55000" ] && [ "$CPUTEMP" -lt  "65000"  ]; then
 	echo -e '\e[33m\e[1m'"CPU `vcgencmd measure_temp` ---> NORMAL-HIGH TEMPERATURE"'\e[0m'
 elif [ "$CPUTEMP" -gt  "65000" ] && [ "$CPUTEMP" -lt  "75000" ]; then
 	echo -e '\e[31m'"CPU `vcgencmd measure_temp`---> HIGH TEMPERATURE!"'\e[0m'
-elif [ "$CPUTEMP" -gt  "75000" ];  then
+elif [ "$CPUTEMP" -gt  "75000" ]; then
 	echo -e '\e[31m\e[1m'"CPU `vcgencmd measure_temp` ---> PLEASE SHUTDOWN RASPBERRYPI: TEMPERATURE IS VERY HIGH!"'\e[0m'
 fi
 
