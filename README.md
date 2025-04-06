@@ -6,12 +6,6 @@ Tired of digging through multiple commands to understand your Raspberry Pi? Rasp
 
 From hardware details and operating system specifics to network configurations, resource usage, and installed software, raspi-info provides a wealth of data to help you monitor, troubleshoot, and understand your Raspberry Pi. It's the perfect utility for enthusiasts, developers, and anyone who wants a quick and easy overview of their Raspberry Pi's inner workings.
 
-  [🔍 Overview](#overview) •
-  [🚀 Install](#install) •
-  [🗑️ Uninstall](#uninstall) •
-  [💻 Commands](#commands) •
-  [📸 Screenshots ](#screenshots)
-
 ## 🔍 Overview <a name="overview"></a>
 - **Direct Usage**: Use `raspi-info` or `raspi-info-light` from the shell.
 - **Automatic Usage**: `raspi-info-light` starts automatically when you log in via SSH.
