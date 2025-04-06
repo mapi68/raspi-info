@@ -1,204 +1,67 @@
-# raspi-info
+# RASPI-INFO
 
-* [Overview](#overview)
-* [Install](#install)
-* [Uninstall](#uninstall)
-* [Commands](#commands)
-* [Screenshot](#screenshot)
-* [Changelog](#changelog)
-* [License](#license)
+**RASPI-INFO is a tool to get a lot of information about your Raspberry Pi.**
 
-## Overview
-**RASPI-INFO is a tool to get a lot of infomations about your Raspberry Pi.**
+Discover the heartbeat of your Raspberry Pi with raspi-info! Unravel its mysteries as you explore system details, CPU performance, network efficiency, and more in a mesmerizing, colorful display. From direct shell usage to automatic execution on SSH login, raspi-info offers over 500 "shell tips" to assist you in bash!
 
-Discover the heartbeat of your Raspberry Pi with raspi-info! Unravel its mysteries as you explore system details, CPU prowess, network performance, and more in a mesmerizing, colorful display. From CPU temperature to advanced internet insights, embark on an exhilarating adventure with raspi-info!
+## 📋 Table of Contents
+- [Overview](#overview)
+- [Installation](#installation)
+- [Uninstallation](#uninstallation)
+- [Commands](#commands)
+- [Screenshots](#screenshots)
 
-- Direct use from shell: raspi-info or raspi-info-light
-- Automatic use: when you login through SSH (only raspi-info-light)
-- RASPI-INFO provides too more than 100 "shell tips" that can be useful to help you in bash!
-- When a new update will be released you'll receive a message at the end of program
+## 🔍 Overview
+- **Direct Usage**: Use `raspi-info` or `raspi-info-light` from the shell.
+- **Automatic Usage**: `raspi-info-light` starts automatically when you log in via SSH.
+- **Shell Tips**: RASPI-INFO provides over 500 shell tips to assist you in bash.
+- **Update Notifications**: You'll receive a message at the end of the program when a new update is available.
 
-![logo](images/raspi-info-logo.png)
-
-## Install
+## ⚙️ Installation
+To install raspi-info, run the following command:
 ```bash
 curl -sSfL https://raw.githubusercontent.com/mapi68/raspi-info/master/raspi-info-install | bash
 ```
 
-## Uninstall
+## 🗑️ Uninstallation
+To uninstall raspi-info, run:
 ```bash
 sudo apt --purge remove raspi-info -y
 ```
 
-If you want to remove installed dependencies too:
+If you also want to remove installed dependencies, run:
 ```bash
 sudo apt --purge autoremove raspi-info -y
 ```
 
-## Commands
-**raspi-info** (main window, with many info)
+## 💻 Commands
+| Command                | Description                                                                 |
+|------------------------|-----------------------------------------------------------------------------|
+| **raspi-info**         | Main window with detailed information                                       |
+| **raspi-info-light**   | Light version, starts by default on SSH login                               |
+| **raspi-info-check**   | Simple tool to check real-time load, temperature, clock, and voltage        |
+| **raspi-info-install** | Install raspi-info                                                          |
+| **raspi-info-update**  | Update raspi-info                                                           |
 
-**raspi-info-light** (light version, start by default when you make a SSH connection)
+## 📸 Screenshots
 
-**raspi-info-check** (simple tool that check in real time load, temp, clock and volt)
-
-**raspi-info-install** (install raspi-info)
-
-**raspi-info-update** (update raspi-info)
-
-## Screenshot
 ### raspi-info-light
 ![raspi-info-light](images/raspi-info-light.png)
 
-### general-info
+### General Information
 ![general-info](images/general-info.png)
 
-### partition-info
+### Partition Information
 ![partition-info](images/partition-info.png)
 
-### folder-info
+### Folder Information
 ![folder-info](images/folder-info.png)
 
-### wireguard-info
-![logo](images/wireguard-info.png)
+### WireGuard Information
+![wireguard-info](images/wireguard-info.png)
 
 ### raspi-info-check
 ![raspi-info-check](images/raspi-info-check.png)
 
 ### raspi-info
 ![raspi-info](images/raspi-info.png)
-
-## Changelog
-
-**raspi-info (20210802); urgency=high**
-  * Now version is based upon date
-  * Check for automatic update in raspi-info-light
-  * Added raspi-info-update
-
-**raspi-info (1.5-3); urgency=medium**
-  * Added bash version only in raspi-info
-
-**raspi-info (1.5-2); urgency=low**
-  * Some cosmetic changes
-
-**raspi-info (1.5-1); urgency=medium**
-  * Show Bitcoin price
-  * Added support for Pi-hole
-
-**raspi-info (1.4-1); urgency=high**
-  * raspi-info now requires elevated privileges to run
-  * Added info about installed packages
-
-**raspi-info (1.3-4); urgency=low**
-  * Some cosmetic changes
-  
-**raspi-info (1.3-3); urgency=medium**
-  * Fixed memory detection for Pi 4
-  * Some cosmetic changes
-  
-**raspi-info (1.3-2); urgency=low**
-  * Added info about Raspberry bootloader for Pi 4
-
-**raspi-info (1.3-1); urgency=high**
-  * Move files from /usr/local to /usr
-  * Added Raspberry model
-
-**raspi-info (1.2-5); urgency=medium**
-  * Added WLAN info in raspi-info and raspi-info-light
-
-**raspi-info (1.2-4); urgency=medium**
-  * Added check for MPG2 and WVC1 codec license
-
-**raspi-info (1.2-3); urgency=medium**
-  * Added IP country detection in raspi-info-light
-
-**raspi-info (1.2-2); urgency=high**
-  * Missing dependencies for OSMC mediacenter
-  
-**raspi-info (1.2-1); urgency=medium**
-  * Added arm64 version
-
-**raspi-info (1.1-7); urgency=medium**
-  * Added Kernel IP routing table
-
-**raspi-info (1.1-6); urgency=medium**
-  * Added support for apcupsd
-
-**raspi-info (1.1-5); urgency=medium**
-  * Added Hardware, Revision and Serial number
-
-**raspi-info (1.1-4); urgency=low**
-  * Added more info in WHOIS
-  
-**raspi-info (1.1-3); urgency=low**
-  * Added support to ping multiple DNS
-  
-**raspi-info (1.1-2); urgency=medium**
-  * Added info from tune2fs
-
-**raspi-info (1.1-1); urgency=high**
-  * Added support for Debian 10
-  * Added new logo
-
-**raspi-info (1.0-19); urgency=medium**
-  * Added wireguard support
-
-**raspi-info (1.0-18); urgency=low**
-  * Fixed cosmetic error
-
-**raspi-info (1.0-17); urgency=medium**
-  * Added interfaces speed
-  * Fixed cosmetic error
-
-**raspi-info (1.0-16); urgency=high**
-  * Now raspi-info removes useless files in /etc/update-motd.d and /etc/motd
-
-**raspi-info (1.0-15); urgency=medium**
-  * Added Filesystem info check and lifetime writes
-
-**raspi-info (1.0-14); urgency=medium**
-  * Fixed DNS ping
-
-**raspi-info (1.0-13); urgency=high**
-  * Fixed file backup in preinst and postrm
-  * Added md5 file
-
-**raspi-info (1.0-12); urgency=low**
-  * Updated Shell tips
-
-**raspi-info (1.0-11); urgency=medium**
-  * Added DNS ping
-
-**raspi-info (1.0-10); urgency=medium**
-  * Added list of USB devices
-
-**raspi-info (1.0-9); urgency=high**
-  * Fixed many bugs
-
-**raspi-info (1.0-8); urgency=medium**
-  * Added shell tips
-
-**raspi-info (1.0-7); urgency=medium**
-  * Added beautiful calendar
-
-**raspi-info (1.0-6); urgency=medium**
-  * Added min-max CPU frequency
-
-**raspi-info (1.0-5); urgency=medium**
-  * Added MAC address for all interfaces
-
-**raspi-info (1.0-4); urgency=medium**
-  * Added traceroute
-
-**raspi-info (1.0-3); urgency=high**
-  * Fixed bug in folder /etc/update-motd.d
-
-**raspi-info (1.0-2); urgency=medium**
-  * Added number of core in CPU info
-
-**raspi-info (1.0-1); urgency=medium**
-  * FIRST RELEASE
-  
-  
-## License
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
