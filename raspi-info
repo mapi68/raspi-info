@@ -11,14 +11,6 @@
 #                                                                               #
 # MIT License                                                                   #
 # Copyright (c) 2019-2025 Massimo Pissarello                                    #
-# Permission is hereby granted, free of charge, to any person obtaining a copy  #
-# of this software and associated documentation files (the "Software"), to deal #
-# in the Software without restriction, including without limitation the rights  #
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell     #
-# copies of the Software, and to permit persons to whom the Software is         #
-# furnished to do so, subject to the following conditions:                      #
-# The above copyright notice and this permission notice shall be included in    #
-# all copies or substantial portions of the Software.                           #
 #                                                                               #
 #################################################################################
 
@@ -82,17 +74,75 @@ if [ -f /sbin/apcupsd ]; then
 fi
 echo -e '\e[0m'
 
-# Temperature
-if [ "$CPUTEMP" -lt  "45000" ]; then
-	echo -e '\e[36m'"CPU `vcgencmd measure_temp` ---> LOW TEMPERATURE"'\e[0m'
-elif [ "$CPUTEMP" -gt  "45000" ] && [ "$CPUTEMP" -lt  "55000" ]; then
-	echo -e '\e[33m'"CPU `vcgencmd measure_temp` ---> NORMAL TEMPERATURE"'\e[0m'
-elif [ "$CPUTEMP" -gt  "55000" ] && [ "$CPUTEMP" -lt  "65000"  ]; then
-	echo -e '\e[33m\e[1m'"CPU `vcgencmd measure_temp` ---> NORMAL-HIGH TEMPERATURE"'\e[0m'
-elif [ "$CPUTEMP" -gt  "65000" ] && [ "$CPUTEMP" -lt  "75000" ]; then
-	echo -e '\e[31m'"CPU `vcgencmd measure_temp`---> HIGH TEMPERATURE!"'\e[0m'
-elif [ "$CPUTEMP" -gt  "75000" ]; then
-	echo -e '\e[31m\e[1m'"CPU `vcgencmd measure_temp` ---> PLEASE SHUTDOWN RASPBERRYPI: TEMPERATURE IS VERY HIGH!"'\e[0m'
+# Temperature monitoring function with graphical representation
+# Get temperature - works for both root and non-root users
+readonly CPUTEMP_VALUE=$(cat /sys/class/thermal/thermal_zone0/temp)
+readonly CPU_TEMP_CELSIUS=$((CPUTEMP_VALUE / 1000))
+readonly CPU_TEMP_DECIMAL=$((CPUTEMP_VALUE % 1000 / 10))
+readonly CPU_TEMP_FORMATTED="${CPU_TEMP_CELSIUS}.${CPU_TEMP_DECIMAL}°C"
+
+# Define temperature thresholds
+readonly TEMP_LOW=45
+readonly TEMP_NORMAL=55
+readonly TEMP_HIGH=65
+readonly TEMP_CRITICAL=75
+
+# Create visual bar graph based on temperature
+readonly BAR_LENGTH=20
+readonly TEMP_PERCENTAGE=$((CPU_TEMP_CELSIUS * 100 / TEMP_CRITICAL))  # Scale based on critical temp
+readonly FILLED_BLOCKS=$((TEMP_PERCENTAGE * BAR_LENGTH / 100))
+
+# Create the bar with gradient effect
+BAR="["
+for ((i=0; i<BAR_LENGTH; i++)); do
+	if [ $i -lt $FILLED_BLOCKS ]; then
+		if [ $CPU_TEMP_CELSIUS -lt $TEMP_LOW ]; then
+			BAR="${BAR}█"  # Full block for better visibility
+		elif [ $CPU_TEMP_CELSIUS -lt $TEMP_NORMAL ]; then
+			BAR="${BAR}█"
+		elif [ $CPU_TEMP_CELSIUS -lt $TEMP_HIGH ]; then
+			BAR="${BAR}█"
+		else
+			BAR="${BAR}█"
+		fi
+	else
+		BAR="${BAR}░"  # Light shade for empty space
+	fi
+done
+BAR="${BAR}]"
+
+# Set color and message based on temperature
+if [ "$CPUTEMP_VALUE" -lt $((TEMP_LOW * 1000)) ]; then
+	echo -e '\e[36m'"CPU ${CPU_TEMP_FORMATTED} $BAR LOW TEMPERATURE"'\e[0m'
+elif [ "$CPUTEMP_VALUE" -lt $((TEMP_NORMAL * 1000)) ]; then
+	echo -e '\e[32m'"CPU ${CPU_TEMP_FORMATTED} $BAR NORMAL TEMPERATURE"'\e[0m'
+elif [ "$CPUTEMP_VALUE" -lt $((TEMP_HIGH * 1000)) ]; then
+	echo -e '\e[33m'"CPU ${CPU_TEMP_FORMATTED} $BAR NORMAL-HIGH TEMPERATURE"'\e[0m'
+elif [ "$CPUTEMP_VALUE" -lt $((TEMP_CRITICAL * 1000)) ]; then
+	echo -e '\e[31m'"CPU ${CPU_TEMP_FORMATTED} $BAR HIGH TEMPERATURE!"'\e[0m'
+else
+	echo -e '\e[31m\e[1m'"CPU ${CPU_TEMP_FORMATTED} $BAR CRITICAL TEMPERATURE! SHUTDOWN RECOMMENDED!"'\e[0m'
+
+	# Log critical temperature event if logging is available and we're root
+	if [ -d "/var/log" ] && [ $(id -u) -eq 0 ]; then
+		echo "$(date): CRITICAL TEMPERATURE ALERT: ${CPU_TEMP_FORMATTED}" >> /var/log/raspi-temp-alerts.log
+	fi
+fi
+
+# Display throttling status if available (requires vcgencmd which usually needs root)
+if command -v vcgencmd &> /dev/null && [ $(id -u) -eq 0 ]; then
+	THROTTLED=$(vcgencmd get_throttled)
+	THROTTLE_CODE=$(echo $THROTTLED | cut -d'=' -f2)
+
+	if [ "$THROTTLE_CODE" != "0x0" ]; then
+		echo -e '\e[33m'"Throttling detected: $THROTTLED"'\e[0m'
+
+		# Decode throttling flags
+		[ $((0x$THROTTLE_CODE & 0x1)) -ne 0 ] && echo -e '\e[33m'" - Under-voltage detected"'\e[0m'
+		[ $((0x$THROTTLE_CODE & 0x2)) -ne 0 ] && echo -e '\e[33m'" - ARM frequency capped"'\e[0m'
+		[ $((0x$THROTTLE_CODE & 0x4)) -ne 0 ] && echo -e '\e[33m'" - Currently throttled"'\e[0m'
+		[ $((0x$THROTTLE_CODE & 0x8)) -ne 0 ] && echo -e '\e[33m'" - Soft temperature limit active"'\e[0m'
+	fi
 fi
 
 # Volt and RAM
@@ -125,11 +175,6 @@ echo -e '\e[0m'"USB devices"
 echo -e '\e[36m'"`lsusb`"
 echo -e '\e[0m'
 
-### OBSOLETE ### Codec license, RASPBERRY PI 4x and Zero NOT HAVE MPEG-2 AND VC-1 HARDWARE DECODE
-#if [[ ! "$RASPMOD" == "Raspberry Pi 4"* && ! "$RASPMOD" == "Raspberry Pi Zero"* ]]; then
-#	echo -e -n '\e[0m'"Codec license: " && echo -e '\e[36m'"`vcgencmd codec_enabled MPG2` / `vcgencmd codec_enabled WVC1`"
-#	echo -e '\e[0m'
-#fi
 
 # Check IP, whois, gateway.....
 INTERFACE=$(ip -o -f inet addr show | awk '/scope global/ {print $2, $4}')
@@ -214,52 +259,6 @@ ping -c 1 google.com &> /dev/null && echo -e "\e[32mInternet connected with IP \
 echo
 echo -e '\e[0m'"Kernel IP routing table"'\e[091m'
 route -n | grep -v "Kernel IP"
-
-# PiHole
-if [[ -f "/usr/local/bin/pihole" ]]; then
-	PiholeInfo() {
-		local summary
-		local cache_summary
-		summary=$(PiholeFTL "stats")
-		cache_info=$(PiholeFTL "cacheinfo")
-		clients=$(grep "unique_clients" <<< "${summary}" | grep -Eo "[0-9]+$")
-		domains_being_blocked_raw=$(grep "domains_being_blocked" <<< "${summary}" | grep -Eo "[0-9]+$")
-		dns_queries_today_raw=$(grep "dns_queries_today" <<< "$summary" | grep -Eo "[0-9]+$")
-		ads_blocked_today_raw=$(grep "ads_blocked_today" <<< "$summary" | grep -Eo "[0-9]+$")
-		ads_percentage_today_raw=$(grep "ads_percentage_today" <<< "$summary" | grep -Eo "[0-9.]+$" | rev | cut -c5- | rev)
-		cache_size=$(grep "cache-size" <<< "$cache_info" | grep -Eo "[0-9.]+$")
-		cache_deletes=$(grep "cache-live-freed" <<< "$cache_info" | grep -Eo "[0-9.]+$")
-		cache_inserts=$(grep "cache-inserted" <<< "$cache_info" | grep -Eo "[0-9.]+$")
-		latest_blocked=$(PiholeFTL recentBlocked)
-		top_blocked=$(PiholeFTL "top-ads (1)" | sed '/^wpad.*/d' | awk '{print $3}')
-		top_domain=$(PiholeFTL "top-domains (1)" | awk '{print $3}')
-	}
-	PiholeFTL() {
-		local ftl_port LINE
-		ftl_port=4711 #$(cat /run/pihole-FTL.port 2> /dev/null)
-		if [[ -n "$ftl_port" ]]; then
-			exec 3<>"/dev/tcp/127.0.0.1/$ftl_port"
-			if { "true" >&3; } 2> /dev/null; then
-				echo -e ">$1 >quit" >&3
-				read -r -t 1 LINE <&3
-				until [[ -z "${LINE}" ]] && [[ ! -t 3 ]]; do
-					echo "$LINE" >&1
-					read -r -t 1 LINE <&3
-				done
-				exec 3>&-
-				exec 3<&-
-			fi
-		else
-			echo "0"
-		fi
-	}
-	PiholeInfo
-	echo
-	echo -e '\e[0m'"Pi-hole Network-wide Ad Blocking"
-	echo -e '\e[33m'"Total queries: "$dns_queries_today_raw" / Queries Blocked: "$ads_blocked_today_raw" / Domains on Blocklist: "$domains_being_blocked_raw
-	echo -e "Clients: "$clients" / \e[91mPercent blocked: "$ads_percentage_today_raw"% \e[33m/ Cache inserted: "$cache_inserts
-	echo -e "Top Permitted Domain: "$top_domain" / Top Blocked Domain: "$top_blocked
-fi
 echo
 
 # Wireguard
