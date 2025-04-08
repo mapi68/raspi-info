@@ -347,4 +347,4 @@ if [ -f /var/run/reboot-required ]; then
 echo -e '\e[0m'"\c"
 echo
 
-rm /tmp/interfaces
+rm -f /tmp/interfaces /tmp/sd /tmp/trace
