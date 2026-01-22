@@ -1,0 +1,56 @@
+#!/bin/bash
+
+#################################################################################
+#                                   _       _        __                         #
+#               _ __ __ _ ___ _ __ (_)     (_)_ __  / _| ___                    #
+#              | '__/ _` / __| '_ \| |_____| | '_ \| |_ / _ \                   #
+#              | | | (_| \__ \ |_) | |_____| | | | |  _| (_) |                  #
+#              |_|  \__,_|___/ .__/|_|     |_|_| |_|_|  \___/                   #
+#                            |_|                                                #
+#                                                                               #
+#                                                                               #
+# MIT License                                                                   #
+# Copyright (c) 2019-2026 Massimo Pissarello                                    #
+#                                                                               #
+#################################################################################
+
+
+# Main Variable
+RI="raspi-info"
+UPVER=$(curl -sSfL "https://raw.githubusercontent.com/mapi68/$RI/master/version")
+
+# Installation Function
+install() {
+  echo -e "\e[1;33mInstalling latest version $UPVER of $RI...\e[0m"
+  temp_deb="/tmp/${RI}_latest.deb"
+  curl -sSfL "https://github.com/mapi68/$RI/raw/master/${RI}_latest.deb" -o "$temp_deb"
+  if [[ $? -eq 0 ]]; then
+    sudo apt install -qq -y "$temp_deb" && rm "$temp_deb"
+    if [[ $? -eq 0 ]]; then
+      echo -e "\e[1;32mInstallation successful!\e[0m" && echo
+    else
+      echo -e "\e[1;31mInstallation failed.\e[0m" && echo
+      return 1 # Signal an error
+    fi
+  else
+    echo -e "\e[1;31mFailed to download $RI.\e[0m" && echo
+    return 1 # Signal an error
+  fi
+}
+
+# Check if the program is installed, and if not, install.
+if ! command -v "$RI" &> /dev/null; then
+    install
+    exit $? # Propagate the exit code of install function
+else
+    # Get the installed version
+    VER=$(dpkg -s "$RI" 2>/dev/null | awk '/^Version:/ {print $2}')
+    if [[ "$VER" -ge "$UPVER" ]]; then
+        echo -e "\e[1;32mYou have version $VER of $RI: no need to install.\e[0m" && echo
+    else
+        install
+        exit $? # Propagate the exit code of install function
+    fi
+fi
+
+exit 0
