@@ -279,7 +279,7 @@ fi
 
 # Ping various server
 echo -e '\e[0m'"Time to ping world common servers and DNS"
-echo -e '\e[94m'"google.com `ping -c 1 google.com | tail -c 23 | head -c 4` ms / youtube.com `ping -c 1 youtube.com | tail -c 23 | head -c 4` ms / instagram.com `ping -c 1 instagram.com | tail -c 23 | head -c 4` ms / amazon.com `ping -c 1 amazon.com | tail -c 23 | head -c 4` ms"
+echo -e '\e[94m'"google.com `ping -c 1 google.com | tail -c 23 | head -c 4` ms / youtube.com `ping -c 1 youtube.com | tail -c 23 | head -c 4` ms / instagram.com `ping -c 1 instagram.com | tail -c 23 | head -c 4` ms / amazon.com `ping -c 1 aws.amazon.com | tail -c 23 | head -c 4` ms"
 echo -e "DNS Google (8.8.8.8) `ping -c 1 8.8.8.8 | tail -c 23 | head -c 4` ms / DNS Quad9 (9.9.9.9) `ping -c 1 9.9.9.9 | tail -c 23 | head -c 4` ms / DNS CloudFlare (1.1.1.1) `ping -c 1 1.1.1.1 | tail -c 23 | head -c 4` ms"
 echo -e '\e[32m'
 
