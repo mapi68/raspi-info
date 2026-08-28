@@ -1,0 +1,62 @@
+#!/bin/bash
+
+####################################################################################
+#                      _       _        __                  _               _      #
+#  _ __ __ _ ___ _ __ (_)     (_)_ __  / _| ___         ___| |__   ___  ___| | __  #
+# | '__/ _` / __| '_ \| |_____| | '_ \| |_ / _ \ _____ / __| '_ \ / _ \/ __| |/ /  #
+# | | | (_| \__ \ |_) | |_____| | | | |  _| (_) |_____| (__| | | |  __/ (__|   <   #
+# |_|  \__,_|___/ .__/|_|     |_|_| |_|_|  \___/       \___|_| |_|\___|\___|_|\_\  #
+#                |_|                                                               #
+#                                                                                  #
+#                                                                                  #
+#                                                                                  #
+# MIT License                                                                      #
+# Copyright (c) 2019-2026 Massimo Pissarello                                       #
+#                                                                                  #
+####################################################################################
+
+# Function to get system information
+get_system_info() {
+    # Data collection
+    local LoadAv=$(uptime | awk -F'[a-z]:' '{print $2}')
+    local Temp=$(vcgencmd measure_temp | cut -f2 -d=)
+    local Clockspeed=$(vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }')
+    local CoreVolt=$(vcgencmd measure_volts | cut -f2 -d= | sed 's/000//')
+    local FreeMem=$(free --mega | awk '/^Mem/ { print $4 }')
+    local Time=$(date '+%H:%M:%S')
+
+    # Display formatted output
+	echo -e "\e[1;94mTime: \e[0m${Time}  \e[1;92mLoad: \e[0m${LoadAv}  \e[1;91mTemp: \e[0m${Temp}  \e[1;93mClock: \e[0m${Clockspeed} MHz  \e[1;95mVolt: \e[0m${CoreVolt}  \e[1;96mFreeMem: \e[0m${FreeMem} MB"
+}
+
+# Function to show the welcome banner
+show_banner() {
+    clear
+    echo -e "\e[1;94m───────────────────────────────────────────────────────────\e[0m"
+    echo -e "\e[1;94m│                    RASPI-INFO-CHECK                     │\e[0m"
+    echo -e "\e[1;94m───────────────────────────────────────────────────────────\e[0m"
+    echo -e "\e[1;92mWelcome! This script monitors your Raspberry Pi.\e[0m"
+    echo -e "\e[1;93mSet the data update interval (1-9 seconds, default: 5s):\e[0m"
+
+    read -p " Interval (s)? " -n 1 -r REPLY
+
+    # Input validation
+    if ! [[ $REPLY =~ ^[1-9]$ ]]; then
+        REPLY=5
+	else
+	echo
+    fi
+
+    echo -e "\e[1;94mInterval set to ${REPLY} seconds. Press CTRL+C to exit.\e[0m"
+	echo
+    sleep 1
+}
+
+# Main
+show_banner
+UPDATE_INTERVAL=$REPLY
+
+while true; do
+    get_system_info
+    sleep $UPDATE_INTERVAL
+done
